@@ -58,7 +58,7 @@ def home():
         elif "who created you" in question:
             answer = "I was created by Nagaraja as part of his learning projects."
 
-        # 🏫 ➡️ Part 1 questions
+        # Part 1 Questions
         elif "where is pallavi international school gandipet located" in question:
             answer = "Gandipet, Hyderabad, Telangana, India."
         elif "what is the full address of pallavi international school gandipet" in question:
@@ -201,24 +201,23 @@ def home():
             answer = "To create global citizens with Indian values."
         elif "what is the school mission" in question:
             answer = "To provide holistic education fostering academic excellence and ethical values."
-
-    else:
-        try:
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",  # or "gpt-4" if you have access
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": question}
-                ]
-            )
-            answer = response.choices[0].message["content"]
-        except Exception as e:
-            answer = f"Error: {str(e)}"
-
-
+        else:
+            try:
+                response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",  # or "gpt-4" if accessible
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": question}
+                    ]
+                )
+                answer = response.choices[0].message["content"]
+            except Exception as e:
+                answer = f"Error: {str(e)}"
         chat_history.append({"question": question, "answer": answer})
         return render_template("index.html", chat_history=chat_history, username=current_user.username)
 
+    # ✅ Ensure a fallback return if neither GET nor POST (extra safety)
+    return render_template("index.html", chat_history=chat_history, username=current_user.username)
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
