@@ -1,51 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Wiki Chatbot</title>
+    <title>PISGpt Chatbot</title>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 0; }
-        .header {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            background-color: #f0f0f0;
-            padding: 10px 20px;
-        }
-        .header a {
-            font-weight: bold;
-            text-decoration: none;
-            color: black;
-        }
-        .container {
+        body {
+            font-family: Arial, sans-serif;
             text-align: center;
-            margin-top: 50px;
+            background: #f0f0f0;
         }
-        input[type=text] { width: 300px; padding: 10px; }
-        button { padding: 10px 20px; }
-        .chat { margin-top: 30px; text-align: left; display: inline-block; }
-        .message { margin-bottom: 20px; }
+        h1 {
+            margin-top: 30px;
+            font-size: 40px;
+        }
+        form {
+            margin: 20px auto;
+            width: 50%;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            font-size: 18px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-left: 10px;
+        }
+        #chat {
+            margin-top: 30px;
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+        .question {
+            font-weight: bold;
+            color: #333;
+        }
+        .answer {
+            margin-bottom: 20px;
+            color: #555;
+        }
+        #micButton {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <a href="/logout">Logout</a>
+    <h1><strong>PISGpt</strong></h1>
+    <h3>The future of communication</h3>
+
+    <form id="questionForm" method="post">
+        <input type="text" name="question" id="questionInput" placeholder="Ask your question here">
+        <button type="submit">Ask</button>
+        <button type="button" id="micButton" onclick="startListening()">🎤 Speak</button>
+    </form>
+
+    <div id="chat">
+        {% for chat in chat_history %}
+            <p class="question">{{ chat.question }}</p>
+            <p class="answer">{{ chat.answer }}</p>
+        {% endfor %}
     </div>
 
-    <div class="container">
-        <h2>Welcome, {{ username }}</h2>
-        <h3>Ask me anything!</h3>
-        <form method="POST">
-            <input type="text" name="question" placeholder="Enter your question" required>
-            <button type="submit">Ask</button>
-        </form>
-        <div class="chat">
-            {% for chat in chat_history %}
-                <div class="message">
-                    <strong>Q:</strong> <b>{{ chat.question }}</b> <br>
-                    <strong>A:</strong> {{ chat.answer }}
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+    <script>
+        function startListening() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-IN'; // Adjust if needed
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('questionInput').value = transcript;
+                document.getElementById('questionForm').submit();
+            };
+
+            recognition.onerror = function(event) {
+                alert('Voice recognition error: ' + event.error);
+            };
+        }
+    </script>
 </body>
 </html>
