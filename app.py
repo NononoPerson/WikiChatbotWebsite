@@ -42,7 +42,6 @@ def home():
     if request.method == "POST":
         question = request.form["question"].lower()
 
-        # ✅ Your personal and school Q&A elif conditions go here
         if "what is my name" in question:
             answer = f"Your name is {current_user.username}."
         elif "how are you" in question:
@@ -51,7 +50,7 @@ def home():
             answer = "My name is PISGpt, your personal assistant."
         elif "who created you" in question:
             answer = "I was created by Nagaraja as part of his learning projects."
-        
+
         if "what is my name" in question:
             answer = f"Your name is {current_user.username}."
         elif "how are you" in question:
@@ -59,7 +58,7 @@ def home():
             if "where is pallavi international school gandipet located" in question:
              answer = "Gandipet, Hyderabad, Telangana, India."
             elif "what is the full address of pallavi international school gandipet" in question:
-             answer = "Near Osman Sagar Lake, Gandipet, Hyderabad, Telangana = 500075."
+             answer = "Near Osman Sagar Lake, Gandipet, Hyderabad, Telangana – 500075."
     elif "in which city is pallavi international school gandipet" in question:
         answer = "Hyderabad."
     elif "which state is pallavi international school gandipet in" in question:
@@ -205,19 +204,16 @@ def home():
     
 
     else:
-        try:
+            try:
                 answer = wikipedia.summary(question, sentences=2)
-        except wikipedia.exceptions.DisambiguationError as e:
+            except wikipedia.exceptions.DisambiguationError as e:
                 answer = wikipedia.summary(e.options[0], sentences=2)
-        except wikipedia.exceptions.PageError:
+            except wikipedia.exceptions.PageError:
                 answer = "I couldn't find an answer."
-        except Exception as e:
+            except Exception as e:
                 answer = f"Error: {str(e)}"
-
-        chat_history.append({"question": question, "answer": answer})
-        return render_template("index.html", chat_history=chat_history, username=current_user.username)
-
-
+    chat_history.append({"question": question, "answer": answer})
+    return render_template("index.html", chat_history=chat_history, username=current_user.username)
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
