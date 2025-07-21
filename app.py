@@ -1,7 +1,8 @@
 from openai import OpenAI
 import os
 
-client = OpenAI(api_key=os.getenv("OPENAIsk-proj--wFffHWnq2OYSXmWaN98MiRtnECMyFiUl5OHMY5nATfXF7EwR-LsBmL3DBppFkgmHKsXm9rN0TT3BlbkFJyYNvPUjmwnFA3t9G2D292hkbuIlc9ASZzt2Ppmc5fTa30XEXYHvkZH0U29Leauq__6-lM_trsA_API_KEY"))
+client = OpenAI(api_key=os.getenv("Chatbot"))
+
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
