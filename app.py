@@ -30,7 +30,6 @@ def load_user(user_id):
 
 # Chat history (simple global list for demo)
 chat_history = []
-
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def home():
@@ -38,10 +37,21 @@ def home():
 
     if request.method == "GET":
         chat_history = []  # Clears chat on fresh open
+        return render_template("index.html", chat_history=chat_history, username=current_user.username)
 
     if request.method == "POST":
         question = request.form["question"].lower()
 
+        # ✅ Your personal and school Q&A elif conditions go here
+        if "what is my name" in question:
+            answer = f"Your name is {current_user.username}."
+        elif "how are you" in question:
+            answer = "I'm just a bot, but I'm doing great helping you today!"
+        elif "what is your name" in question:
+            answer = "My name is PISGpt, your personal assistant."
+        elif "who created you" in question:
+            answer = "I was created by Nagaraja as part of his learning projects."
+        
         if "what is my name" in question:
             answer = f"Your name is {current_user.username}."
         elif "how are you" in question:
@@ -49,7 +59,7 @@ def home():
             if "where is pallavi international school gandipet located" in question:
              answer = "Gandipet, Hyderabad, Telangana, India."
             elif "what is the full address of pallavi international school gandipet" in question:
-             answer = "Near Osman Sagar Lake, Gandipet, Hyderabad, Telangana – 500075."
+             answer = "Near Osman Sagar Lake, Gandipet, Hyderabad, Telangana = 500075."
     elif "in which city is pallavi international school gandipet" in question:
         answer = "Hyderabad."
     elif "which state is pallavi international school gandipet in" in question:
@@ -193,19 +203,20 @@ def home():
     elif "what is the school mission" in question:
         answer = "To provide holistic education fostering academic excellence and ethical values."
     
+
     else:
-     try:
-       answer = wikipedia.summary(question, sentences=2)
-     except wikipedia.exceptions.DisambiguationError as e:
-      answer = wikipedia.summary(e.options[0], sentences=2)
-     except wikipedia.exceptions.PageError:
-      answer = "I couldn't find an answer."
-     except Exception as e:
-      answer = f"Error: {str(e)}"
+        try:
+                answer = wikipedia.summary(question, sentences=2)
+        except wikipedia.exceptions.DisambiguationError as e:
+                answer = wikipedia.summary(e.options[0], sentences=2)
+        except wikipedia.exceptions.PageError:
+                answer = "I couldn't find an answer."
+        except Exception as e:
+                answer = f"Error: {str(e)}"
 
-    chat_history.append({"question": question, "answer": answer})
+        chat_history.append({"question": question, "answer": answer})
+        return render_template("index.html", chat_history=chat_history, username=current_user.username)
 
-    return render_template("index.html", chat_history=chat_history, username=current_user.username)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
