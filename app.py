@@ -1,6 +1,6 @@
-import openai
-import os
+from openai import OpenAI
 
+client = OpenAI()
 # Set your OpenAI API key
 openai.api_key = os.getenv("OPENAI_sk-proj--wFffHWnq2OYSXmWaN98MiRtnECMyFiUl5OHMY5nATfXF7EwR-LsBmL3DBppFkgmHKsXm9rN0TT3BlbkFJyYNvPUjmwnFA3t9G2D292hkbuIlc9ASZzt2Ppmc5fTa30XEXYHvkZH0U29Leauq__6-lM_trsAAPI_KEY")
 from flask import Flask, render_template, request, redirect, url_for, flash
@@ -201,20 +201,24 @@ def home():
             answer = "To create global citizens with Indian values."
         elif "what is the school mission" in question:
             answer = "To provide holistic education fostering academic excellence and ethical values."
-        else:
-            try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",  # or "gpt-4" if accessible
-                    messages=[
-                        {"role": "system", "content": "You are a helpful assistant."},
-                        {"role": "user", "content": question}
-                    ]
-                )
-                answer = response.choices[0].message["content"]
-            except Exception as e:
-                answer = f"Error: {str(e)}"
-        chat_history.append({"question": question, "answer": answer})
-        return render_template("index.html", chat_history=chat_history, username=current_user.username)
+    else:
+        try:
+            from openai import OpenAI
+            client = OpenAI()
+
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",  # or "gpt-4" if accessible
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": question}
+                ]
+            )
+            answer = response.choices[0].message.content
+        except Exception as e:
+            answer = f"Error: {str(e)}"
+
+    chat_history.append({"question": question, "answer": answer})
+    return render_template("index.html", chat_history=chat_history, username=current_user.username)
 
     # ✅ Ensure a fallback return if neither GET nor POST (extra safety)
     return render_template("index.html", chat_history=chat_history, username=current_user.username)
