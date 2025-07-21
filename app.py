@@ -1,8 +1,7 @@
 from openai import OpenAI
+import os
 
-client = OpenAI()
-# Set your OpenAI API key
-openai.api_key = os.getenv("OPENAI_sk-proj--wFffHWnq2OYSXmWaN98MiRtnECMyFiUl5OHMY5nATfXF7EwR-LsBmL3DBppFkgmHKsXm9rN0TT3BlbkFJyYNvPUjmwnFA3t9G2D292hkbuIlc9ASZzt2Ppmc5fTa30XEXYHvkZH0U29Leauq__6-lM_trsAAPI_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_sk-proj--wFffHWnq2OYSXmWaN98MiRtnECMyFiUl5OHMY5nATfXF7EwR-LsBmL3DBppFkgmHKsXm9rN0TT3BlbkFJyYNvPUjmwnFA3t9G2D292hkbuIlc9ASZzt2Ppmc5fTa30XEXYHvkZH0U29Leauq__6-lM_trsAAPI_KEY"))
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
