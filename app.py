@@ -41,21 +41,19 @@ chat_history = []
 def home():
     global chat_history
 
-    
-    if request.method == "POST":
-     question = request.form.get("question", "").lower()
-    answer = None  # <--- Initialize answer as None
+    if request.method == "GET":
+        chat_history = []  # Clears chat on fresh open
+        return render_template("index.html", chat_history=chat_history, username=current_user.username)
 
-    if not question:
-        answer = "Please type a question."
-    elif "what is my name" in question:
-        answer = f"Your name is {current_user.username}."
-    elif "how are you" in question:
-        answer = "I'm just a bot, but I'm doing great helping you today!"
-    elif "what is your name" in question:
-        answer = "My name is PISGpt, your personal assistant."
-    elif "who created you" in question:
-        answer = "I was created by Nagaraja as part of his learning projects."
+    if request.method == "POST":
+        question = request.form.get("question", "").lower()
+        answer = None
+
+        if not question:
+            answer = "Please type a question."
+        elif "what is my name" in question:
+            answer = f"Your name is {current_user.username}."
+
 
 
         # Part 1 Questions
@@ -202,22 +200,19 @@ def home():
     elif "what is the school mission" in question:
         answer = "To provide holistic education fostering academic excellence and ethical values."
     else:
-        try:
-
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": question}
-                ]
-            )
-            answer = response.choices[0].message.content
-        except Exception as e:
-            answer = f"Error: {str(e)}"
-
-    # ✅ Final safety net if somehow still None
+            try:
+                response = client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": question}
+                    ]
+                )
+                answer = response.choices[0].message.content
+            except Exception as e:
+                answer = f"Error: {str(e)}"
     if answer is None:
-        answer = "Sorry, I don't know the answer."
+            answer = "Sorry, I don't know the answer."
 
     chat_history.append({"question": question, "answer": answer})
     return render_template("index.html", chat_history=chat_history, username=current_user.username)
