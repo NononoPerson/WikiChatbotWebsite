@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wiki Chatbot</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 0; }
+        .header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+        }
+        .header a {
+            font-weight: bold;
+            text-decoration: none;
+            color: black;
+        }
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        input[type=text] { width: 300px; padding: 10px; }
+        button { padding: 10px 20px; }
+        .chat { margin-top: 30px; text-align: left; display: inline-block; }
+        .message { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="container">
+        <h2>Welcome, {{ username }}</h2>
+        <h3>Ask me anything!</h3>
+        <form method="POST">
+            <input type="text" name="question" placeholder="Enter your question" required>
+            <button type="submit">Ask</button>
+        </form>
+        <div class="chat">
+            {% for chat in chat_history %}
+                <div class="message">
+                    <strong>Q:</strong> <b>{{ chat.question }}</b> <br>
+                    <strong>A:</strong> {{ chat.answer }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
